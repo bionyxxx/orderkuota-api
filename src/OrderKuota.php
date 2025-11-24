@@ -24,25 +24,28 @@ class OrderKuota
 
     private $authToken, $username;
 
-    public function __construct($username = false, $authToken = false)
+    public function __construct($username, $authToken = false)
     {
-        if ($username) {
-            $this->username = $username;
-        }
+        $this->username = $username;
         if ($authToken) {
             $this->authToken = $authToken;
         }
     }
 
-    public function loginRequest($username, $password)
+    // HAPUS parameter $username, gunakan $this->username
+    public function loginRequest($password)
     {
-        $payload = "username=" . $username . "&password=" . $password . "&app_reg_id=" . self::APP_REG_ID . "&app_version_code=" . self::APP_VERSION_CODE . "app_version_name=" . self::APP_VERSION_NAME . "";
+        // Perbaikan: Menambahkan '&' sebelum app_version_name
+        $payload = "username=" . $this->username . "&password=" . $password . "&app_reg_id=" . self::APP_REG_ID . "&app_version_code=" . self::APP_VERSION_CODE . "&app_version_name=" . self::APP_VERSION_NAME . "";
         return self::Request("POST", self::API_URL . '/login', $payload, true);
     }
 
-    public function getAuthToken($username, $otp)
+    // HAPUS parameter $username, gunakan $this->username
+    // Parameter $otp diganti $password sesuai logika endpoint login, atau tetap $otp jika memang itu variabelnya
+    public function getAuthToken($otp)
     {
-        $payload = "username=" . $username . "&password=" . $otp . "&app_reg_id=" . self::APP_REG_ID . "&app_version_code=" . self::APP_VERSION_CODE . "app_version_name=" . self::APP_VERSION_NAME . "";
+        // Perbaikan: Menambahkan '&' sebelum app_version_name
+        $payload = "username=" . $this->username . "&password=" . $otp . "&app_reg_id=" . self::APP_REG_ID . "&app_version_code=" . self::APP_VERSION_CODE . "&app_version_name=" . self::APP_VERSION_NAME . "";
         return self::Request("POST", self::API_URL . '/login', $payload, true);
     }
 
