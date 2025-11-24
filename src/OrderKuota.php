@@ -20,7 +20,7 @@ class OrderKuota
     const APP_REG_ID = 'di309HvATsaiCppl5eDpoc:APA91bFUcTOH8h2XHdPRz2qQ5Bezn-3_TaycFcJ5pNLGWpmaxheQP9Ri0E56wLHz0_b1vcss55jbRQXZgc9loSfBdNa5nZJZVMlk7GS1JDMGyFUVvpcwXbMDg8tjKGZAurCGR4kDMDRJ';
     const PHONE_MODEL = 'SM-G960N';
     const PHONE_UUID = 'di309HvATsaiCppl5eDpoc';
-    
+
 
     private $authToken, $username;
 
@@ -51,13 +51,13 @@ class OrderKuota
 
     public function getTransactionQris($type = '')
     {
-        $payload = "request_time=".time()."&app_reg_id=" . self::APP_REG_ID . "&phone_android_version=9&app_version_code=" . self::APP_VERSION_CODE . "&phone_uuid=" . self::PHONE_UUID . "&auth_username=" . $this->username . "&requests[1]=point&auth_token=" . $this->authToken . "&app_version_name=" . self::APP_VERSION_NAME . "&ui_mode=light&requests[0]=account&phone_model=" . self::PHONE_MODEL . "";
+        $payload = "request_time=".time()."&app_reg_id=" . self::APP_REG_ID . "&phone_android_version=9&app_version_code=" . self::APP_VERSION_CODE . "&phone_uuid=" . self::PHONE_UUID . "&auth_username=" . $this->username . "&requests[1]=point&auth_token=" . $this->authToken . "&app_version_name=" . self::APP_VERSION_NAME . "&ui_mode=light&phone_model=" . self::PHONE_MODEL . "";
         return self::Request("POST", self::API_URL . '/get', $payload, true);
     }
 
     public function withdrawalQris($amount = '')
     {
-        $payload = "request_time=".time()."&app_reg_id=" . self::APP_REG_ID . "&phone_android_version=9&app_version_code=" . self::APP_VERSION_CODE . "&phone_uuid=" . self::PHONE_UUID . "&auth_username=" . $this->username . "&requests[qris_withdraw][amount]=" . $amount . "&auth_token=" . $this->authToken . "&app_version_name=" . self::APP_VERSION_NAME . "&ui_mode=light&requests[0]=account&phone_model=" . self::PHONE_MODEL . "";
+        $payload = "request_time=".time()."&app_reg_id=" . self::APP_REG_ID . "&phone_android_version=9&app_version_code=" . self::APP_VERSION_CODE . "&phone_uuid=" . self::PHONE_UUID . "&auth_username=" . $this->username . "&requests[qris_withdraw][amount]=" . $amount . "&auth_token=" . $this->authToken . "&app_version_name=" . self::APP_VERSION_NAME . "&ui_mode=light&phone_model=" . self::PHONE_MODEL . "";
         return self::Request("POST", self::API_URL . '/get', $payload, true);
     }
 
@@ -72,7 +72,6 @@ class OrderKuota
             'auth_username' => $this->username,
             'requests' => [
                 'qris_ajaib' => ['amount' => $amount],
-                0 => 'account' // request check account
             ],
             'auth_token' => $this->authToken,
             'app_version_name' => self::APP_VERSION_NAME,
@@ -85,6 +84,24 @@ class OrderKuota
         return self::Request("POST", self::API_URL . '/get', http_build_query($data), true);
     }
 
+    public function getTransactionQrisAjaib()
+    {
+        // Menggunakan time() standar atau microtime sesuai kebutuhan endpoint
+        // Defaultnya kita samakan dengan pattern getTransactionQris sebelumnya
+        $payload = "request_time=" . time() . 
+                   "&app_reg_id=" . self::APP_REG_ID . 
+                   "&phone_android_version=9" . 
+                   "&app_version_code=" . self::APP_VERSION_CODE . 
+                   "&phone_uuid=" . self::PHONE_UUID . 
+                   "&auth_username=" . $this->username . // Menggunakan property class $this->username
+                   "&requests[qris_ajaib_history][]=" . // Bagian request history kosong
+                   "&auth_token=" . $this->authToken . 
+                   "&app_version_name=" . self::APP_VERSION_NAME . 
+                   "&ui_mode=light" . 
+                   "&phone_model=" . self::PHONE_MODEL;
+
+        return self::Request("POST", self::API_URL . '/get', $payload, true);
+    }
 
     protected function buildHeaders()
     {
