@@ -61,6 +61,30 @@ class OrderKuota
         return self::Request("POST", self::API_URL . '/get', $payload, true);
     }
 
+    public function createQrisAjaib($amount)
+    {
+        $data = [
+            'request_time' => round(microtime(true) * 1000),
+            'app_reg_id' => self::APP_REG_ID,
+            'phone_android_version' => 9,
+            'app_version_code' => self::APP_VERSION_CODE,
+            'phone_uuid' => self::PHONE_UUID,
+            'auth_username' => $this->username,
+            'requests' => [
+                'qris_ajaib' => ['amount' => $amount],
+                0 => 'account' // request check account
+            ],
+            'auth_token' => $this->authToken,
+            'app_version_name' => self::APP_VERSION_NAME,
+            'ui_mode' => 'light',
+            'phone_model' => self::PHONE_MODEL
+        ];
+
+        // http_build_query otomatis mengubah array di atas menjadi string:
+        // request_time=123...&requests%5Bqris_ajaib%5D%5Bamount%5D=10000...
+        return self::Request("POST", self::API_URL . '/get', http_build_query($data), true);
+    }
+
 
     protected function buildHeaders()
     {
