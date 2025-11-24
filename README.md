@@ -16,7 +16,7 @@ The repository owner(s) and contributors are not liable for any damages, losses,
 Installation
 ------------
 ```
-composer require yuf1dev/orderkuota-api
+composer require bionyxxx/orderkuota-api
 ```
 Features
 ------------
