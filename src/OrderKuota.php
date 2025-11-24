@@ -1,6 +1,6 @@
 <?php
 
-namespace YuF1Dev;
+namespace bionyxxx;
 
 /**
  * [OrderKuota] OrderKuota Api PHP Class (Un-Official)
