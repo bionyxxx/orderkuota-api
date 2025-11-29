@@ -23,6 +23,8 @@ class OrderKuota
 
 
     private $authToken, $username;
+    private $proxyHost, $proxyPort, $proxyUser, $proxyPass;
+    private $proxied = false;
 
     public function __construct($username, $authToken = false)
     {
@@ -30,6 +32,15 @@ class OrderKuota
         if ($authToken) {
             $this->authToken = $authToken;
         }
+    }
+
+    public function setProxy($host, $port, $user = null, $pass = null)
+    {
+        $this->proxyHost = $host;
+        $this->proxyPort = $port;
+        $this->proxyUser = $user;
+        $this->proxyPass = $pass;
+        $this->proxied = true;
     }
 
     // HAPUS parameter $username, gunakan $this->username
@@ -51,13 +62,13 @@ class OrderKuota
 
     public function getTransactionQris($type = '')
     {
-        $payload = "request_time=".time()."&app_reg_id=" . self::APP_REG_ID . "&phone_android_version=9&app_version_code=" . self::APP_VERSION_CODE . "&phone_uuid=" . self::PHONE_UUID . "&auth_username=" . $this->username . "&requests[1]=point&auth_token=" . $this->authToken . "&app_version_name=" . self::APP_VERSION_NAME . "&ui_mode=light&phone_model=" . self::PHONE_MODEL . "";
+        $payload = "request_time=" . time() . "&app_reg_id=" . self::APP_REG_ID . "&phone_android_version=9&app_version_code=" . self::APP_VERSION_CODE . "&phone_uuid=" . self::PHONE_UUID . "&auth_username=" . $this->username . "&requests[1]=point&auth_token=" . $this->authToken . "&app_version_name=" . self::APP_VERSION_NAME . "&ui_mode=light&phone_model=" . self::PHONE_MODEL . "";
         return self::Request("POST", self::API_URL . '/get', $payload, true);
     }
 
     public function withdrawalQris($amount = '')
     {
-        $payload = "request_time=".time()."&app_reg_id=" . self::APP_REG_ID . "&phone_android_version=9&app_version_code=" . self::APP_VERSION_CODE . "&phone_uuid=" . self::PHONE_UUID . "&auth_username=" . $this->username . "&requests[qris_withdraw][amount]=" . $amount . "&auth_token=" . $this->authToken . "&app_version_name=" . self::APP_VERSION_NAME . "&ui_mode=light&phone_model=" . self::PHONE_MODEL . "";
+        $payload = "request_time=" . time() . "&app_reg_id=" . self::APP_REG_ID . "&phone_android_version=9&app_version_code=" . self::APP_VERSION_CODE . "&phone_uuid=" . self::PHONE_UUID . "&auth_username=" . $this->username . "&requests[qris_withdraw][amount]=" . $amount . "&auth_token=" . $this->authToken . "&app_version_name=" . self::APP_VERSION_NAME . "&ui_mode=light&phone_model=" . self::PHONE_MODEL . "";
         return self::Request("POST", self::API_URL . '/get', $payload, true);
     }
 
@@ -88,17 +99,17 @@ class OrderKuota
     {
         // Menggunakan time() standar atau microtime sesuai kebutuhan endpoint
         // Defaultnya kita samakan dengan pattern getTransactionQris sebelumnya
-        $payload = "request_time=" . time() . 
-                   "&app_reg_id=" . self::APP_REG_ID . 
-                   "&phone_android_version=9" . 
-                   "&app_version_code=" . self::APP_VERSION_CODE . 
-                   "&phone_uuid=" . self::PHONE_UUID . 
-                   "&auth_username=" . $this->username . // Menggunakan property class $this->username
-                   "&requests[qris_ajaib_history][]=" . // Bagian request history kosong
-                   "&auth_token=" . $this->authToken . 
-                   "&app_version_name=" . self::APP_VERSION_NAME . 
-                   "&ui_mode=light" . 
-                   "&phone_model=" . self::PHONE_MODEL;
+        $payload = "request_time=" . time() .
+            "&app_reg_id=" . self::APP_REG_ID .
+            "&phone_android_version=9" .
+            "&app_version_code=" . self::APP_VERSION_CODE .
+            "&phone_uuid=" . self::PHONE_UUID .
+            "&auth_username=" . $this->username . // Menggunakan property class $this->username
+            "&requests[qris_ajaib_history][]=" . // Bagian request history kosong
+            "&auth_token=" . $this->authToken .
+            "&app_version_name=" . self::APP_VERSION_NAME .
+            "&ui_mode=light" .
+            "&phone_model=" . self::PHONE_MODEL;
 
         return self::Request("POST", self::API_URL . '/get', $payload, true);
     }
@@ -122,6 +133,14 @@ class OrderKuota
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true
         ));
+
+        if ($this->proxied) {
+            curl_setopt($ch, CURLOPT_PROXY, $this->proxyHost);
+            curl_setopt($ch, CURLOPT_PROXYPORT, $this->proxyPort);
+            if ($this->proxyUser && $this->proxyPass) {
+                curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->proxyUser . ':' . $this->proxyPass);
+            }
+        }
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
 
