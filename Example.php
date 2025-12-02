@@ -1,7 +1,7 @@
 <?php
 require 'src/OrderKuota.php';
 
-use YuF1Dev\OrderKuota;
+use bionyxxx\OrderKuota;
 
 $username = '';
 $token = '123456:abcdefghi...........';
