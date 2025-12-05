@@ -43,6 +43,16 @@ class OrderKuota
         $this->proxied = true;
     }
 
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function getAuthToken()
+    {
+        return $this->authToken;
+    }
+
     // HAPUS parameter $username, gunakan $this->username
     public function loginRequest($password)
     {
@@ -53,7 +63,7 @@ class OrderKuota
 
     // HAPUS parameter $username, gunakan $this->username
     // Parameter $otp diganti $password sesuai logika endpoint login, atau tetap $otp jika memang itu variabelnya
-    public function getAuthToken($otp)
+    public function getAuthTokenRequest($otp)
     {
         // Perbaikan: Menambahkan '&' sebelum app_version_name
         $payload = "username=" . $this->username . "&password=" . $otp . "&app_reg_id=" . self::APP_REG_ID . "&app_version_code=" . self::APP_VERSION_CODE . "&app_version_name=" . self::APP_VERSION_NAME . "";
