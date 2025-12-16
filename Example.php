@@ -3,9 +3,18 @@ require 'src/OrderKuota.php';
 
 use bionyxxx\OrderKuota;
 
-$username = '';
-$token = '123456:abcdefghi...........';
+$username = 'your_username';
+$token = 'your_token_here';
 $orderkuota = new OrderKuota($username, $token);
 
-//Get All History Transaction QRIS
-echo $orderkuota->getTransactionQris();
+//echo $orderkuota->loginRequest('pakche12345');
+
+//echo $orderkuota->getAuthTokenRequest('94066');
+
+//echo $orderkuota->createQrisAjaib(10000);
+
+//echo $orderkuota->getTransactionQrisAjaib();
+
+//echo $orderkuota->createQrisMerchant(10000);
+
+//echo $orderkuota->getTransactionQrisMerchant();
